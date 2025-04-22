@@ -5,8 +5,9 @@ import com.hackathon.preparacao.deteccao_fraude_api.service.TransacaoService;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,6 +39,24 @@ public class LogicaValidacoes {
     }
 
     public boolean validarQuantidadeTransferencias(Transacao transacao) {
+        List<Transacao> listaTransacao = transacaoService.validarQuantidadeTransferencias(transacao.getUserId());
+
+        int box = 0;
+
+        for(int i = 0; i < listaTransacao.size() - 1; i++){
+            Duration duracao = Duration.between(listaTransacao.get(i).getDataTransacao(), listaTransacao.get(i+1).getDataTransacao());
+            long minutes = duracao.toMinutes();
+
+            if (minutes < 10){
+                box++;
+            }
+
+            if(box == 3){
+                return false;
+            }
+
+        }
+
         return true;
     }
     public boolean validarGrandeGasto(Transacao transacao) {
