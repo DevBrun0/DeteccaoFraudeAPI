@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class LogicaValidacoes {
@@ -54,6 +55,7 @@ public class LogicaValidacoes {
 
         return quantidadeTransacoes > minutosLimite;
     }
+
     public boolean validarGrandeGasto(Transacao transacao) {
         List<Transacao> listaTransacao = getListaTransacao(transacao);
 
@@ -124,8 +126,13 @@ public class LogicaValidacoes {
     }
 
     public boolean validarPadraoTriangulo(Transacao transacao) {
-        // TODO
-        return false;
+        List<Transacao> listaTransacoes = getListaTransacao(transacao);
+
+        int box = (int) IntStream.range(0, listaTransacoes.size() - 1)
+                .filter(i -> listaTransacoes.get(i).getUserId() != listaTransacoes.get(i + 1).getUserId())
+                .count();
+
+        return box >= 3;
     }
 
     private List<Transacao> transacoesPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim, List<Transacao> listaTransacao ) {
