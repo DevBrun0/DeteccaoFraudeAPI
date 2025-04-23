@@ -41,24 +41,17 @@ public class LogicaValidacoes {
     public boolean validarQuantidadeTransferencias(Transacao transacao) {
         List<Transacao> listaTransacao = transacaoService.validarQuantidadeTransferencias(transacao.getUserId());
 
-        int box = 0;
+        int minutosLimite = 5;
 
-        for(int i = 0; i < listaTransacao.size() - 1; i++){
-            Duration duracao = Duration.between(listaTransacao.get(i).getDataTransacao(), listaTransacao.get(i+1).getDataTransacao());
-            long minutes = duracao.toMinutes();
+        LocalDateTime tempoLimite = LocalDateTime.now().minusMinutes(minutosLimite);
 
-            if (minutes < 10){
-                box++;
-            }
+        long quantidadeTransacoes = listaTransacao.stream()
+                .filter(t -> t.getDataTransacao().isAfter(tempoLimite))
+                .count();
 
-            if(box == 3){
-                return false;
-            }
-
-        }
-
-        return true;
+        return quantidadeTransacoes > minutosLimite;
     }
+
     public boolean validarGrandeGasto(Transacao transacao) {
         return true;
     }
