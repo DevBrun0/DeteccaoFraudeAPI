@@ -71,12 +71,12 @@ public class TransacaoService {
     }
 
 
-    public boolean buscarListaTransacoesPorCliente(@PathVariable String id) {
+    public List<Transacao> buscarListaTransacoesPorCliente(@PathVariable String id) {
         /*
         TODO Lógica para pegar lista de gastos no banco de dados ou API.
         */
 
-        return true;
+        return gerarTransacoes.gerarTransacoesExemplo();
 
     }
 
